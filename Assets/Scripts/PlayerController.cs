@@ -52,6 +52,12 @@ public class PlayerController : MonoBehaviour
     private bool _isFalling = false;
     public float maxFallSpeed = 1;
 
+    [Header("Weapon")]
+    private float _firePressTime = 0;
+    private float _lastFireTime = 0;
+    [Range(0.1f, 1)] public float fireRate = 0.5f;
+    public Transform firePoint;
+
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -66,6 +72,7 @@ public class PlayerController : MonoBehaviour
         UpdateJump();
         UpdateDash();
         UpdateFall();
+        UpdateFireWeapon();
     }
 
     private void FixedUpdate() {
@@ -93,6 +100,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
             _dashPressTime = Time.time;
         }
+        // Fire Weapon
+        _firePressTime = Input.GetMouseButton(0) ? Time.time : 0;
     }
 
     private void UpdateMove() {
@@ -168,6 +177,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void UpdateFireWeapon() {
+        if (CanFireWeapon()) {
+            print("firing");
+            // launch projectil
+            _lastFireTime = Time.time;
+        }
+    }
+
     private void CheckGround() {
         _isGrounded = Physics2D.RaycastNonAlloc(groundCheckTransform.position, Vector2.down, _groundCollisions, groundCheckRange, groundLayerMask) > 0;
     }
@@ -186,14 +203,17 @@ public class PlayerController : MonoBehaviour
         return !_isDashing && _dashPressTime > 0 && Time.time - _dashPressTime <= dashBufferTime;
     }
 
+    private bool CanFireWeapon() {
+        bool firePressed = _firePressTime > 0;
+        bool isFiring = Time.time - _lastFireTime < fireRate;
+        return !_isDashing && !isFiring && firePressed;
+    }
+
     #region Gizmos
     private void OnDrawGizmosSelected()
     {
-		// Gizmos.color = Color.green;
-		// Gizmos.DrawWireCube(groundCheckPoint.position, groundCheckSize);
-		// Gizmos.color = Color.blue;
-		// Gizmos.DrawWireCube(rightWallCheckPoint.position, wallCheckSize);
-		// Gizmos.DrawWireCube(leftWallCheckPoint.position, wallCheckSize);
+		Gizmos.color = Color.green;
+		Gizmos.DrawRay(groundCheckTransform.position, Vector2.down * groundCheckRange);
 	}
     #endregion
 }
