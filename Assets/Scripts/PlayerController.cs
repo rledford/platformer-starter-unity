@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -53,16 +49,18 @@ public class PlayerController : MonoBehaviour
     public float maxFallSpeed = 1;
 
     [Header("Weapon")]
-    private float _firePressTime = 0;
-    private float _lastFireTime = 0;
-    [Range(0.1f, 1)] public float fireRate = 0.5f;
-    public Transform firePoint;
+    public Transform weaponAttachPoint;
+    public GameObject[] weaponPrefabs;
+    private GameObject _currentWeapon;
 
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
     void Start() {
+        if (weaponPrefabs.Length > 0) {
+            SetWeapon(Instantiate(weaponPrefabs[0]));
+        }
     }
 
     private void Update() {
@@ -72,7 +70,7 @@ public class PlayerController : MonoBehaviour
         UpdateJump();
         UpdateDash();
         UpdateFall();
-        UpdateFireWeapon();
+        UpdateAim();
     }
 
     private void FixedUpdate() {
@@ -101,7 +99,11 @@ public class PlayerController : MonoBehaviour
             _dashPressTime = Time.time;
         }
         // Fire Weapon
-        _firePressTime = Input.GetMouseButton(0) ? Time.time : 0;
+        if (Input.GetMouseButtonDown(0)) {
+            _currentWeapon.GetComponent<WeaponController>().StartFiring();
+        } else if (Input.GetMouseButtonUp(0)) {
+            _currentWeapon.GetComponent<WeaponController>().StopFiring();
+        }
     }
 
     private void UpdateMove() {
@@ -177,12 +179,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdateFireWeapon() {
-        if (CanFireWeapon()) {
-            print("firing");
-            // launch projectil
-            _lastFireTime = Time.time;
+    private void UpdateAim() {
+        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - weaponAttachPoint.transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        weaponAttachPoint.rotation = rotation;
+        _currentWeapon.GetComponent<WeaponController>().AimAt(direction.normalized);
+    }
+
+    private void SetWeapon(GameObject weapon) {
+        print("attaching weapon");
+        if (weaponAttachPoint == null) {
+            print("Weapon Attach Point is not set");
+            return;
         }
+
+        weapon.transform.SetParent(weaponAttachPoint, false);
+        weapon.GetComponent<WeaponController>().Setup(gameObject);
+        _currentWeapon = weapon;
     }
 
     private void CheckGround() {
@@ -201,12 +215,6 @@ public class PlayerController : MonoBehaviour
 
     private bool CanDash() {
         return !_isDashing && _dashPressTime > 0 && Time.time - _dashPressTime <= dashBufferTime;
-    }
-
-    private bool CanFireWeapon() {
-        bool firePressed = _firePressTime > 0;
-        bool isFiring = Time.time - _lastFireTime < fireRate;
-        return !_isDashing && !isFiring && firePressed;
     }
 
     #region Gizmos
