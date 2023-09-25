@@ -30,12 +30,4 @@ public class BulletController : MonoBehaviour
         _shooter = shooter;
         _trajectory = trajectory;
     }
-
-    public void SetTrajectory(Vector2 trajectory) {
-        _trajectory = trajectory;
-    }
-
-    public void SetShooter(GameObject shooter) {
-        _shooter = shooter;
-    }
 }
