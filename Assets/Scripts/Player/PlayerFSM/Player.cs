@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -63,6 +64,29 @@ public class Player : MonoBehaviour
         workspace.Set(vx, CurrentVelocity.y);
         RB.velocity = workspace;
         CurrentVelocity = workspace;
+    }
+
+    public void AccelerateX() {
+        if (Math.Abs(CurrentVelocity.x) > playerData.moveSpeed) {
+            return;
+        }
+
+        float vx = CurrentVelocity.x + FacingDirection * playerData.moveSpeed * playerData.moveAccel * Time.deltaTime;
+        if (Math.Abs(vx) > playerData.moveSpeed) {
+            SetVelocityX(playerData.moveSpeed * FacingDirection);
+        } else {
+            SetVelocityX(vx);
+        }
+    }
+
+    public void DecelerateX() {
+        float vx = Math.Abs(CurrentVelocity.x) - playerData.moveSpeed * playerData.moveDecel * Time.deltaTime;
+
+        if (vx < 0.1f) {
+            SetVelocityX(0f);
+        } else {
+            SetVelocityX(vx * FacingDirection);
+        }
     }
 
     public void SetVelocityY(float vy) {

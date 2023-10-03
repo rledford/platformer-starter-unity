@@ -25,11 +25,16 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.LogicUpdate();
         player.CheckShouldFlip(xInput);
-        player.SetVelocityX(playerData.moveSpeed * xInput);
-        if (dashInput) {
+        if (dashInput && player.DashState.CanDash()) {
+            player.InputHandler.ConsumeDashInput();
             stateMachine.ChangeState(player.DashState);
         } else if (xInput == 0) {
-            stateMachine.ChangeState(player.IdleState);
+            player.DecelerateX();
+            if (player.CurrentVelocity.x == 0f) {
+                stateMachine.ChangeState(player.IdleState);
+            }
+        } else {
+            player.AccelerateX();
         }
     }
 

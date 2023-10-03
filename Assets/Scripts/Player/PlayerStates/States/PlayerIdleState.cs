@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerIdleState : PlayerGroundedState
 {
     public PlayerIdleState(Player player, PlayerStateMachine stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
@@ -26,7 +24,8 @@ public class PlayerIdleState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (dashInput) {
+        if (dashInput && player.DashState.CanDash()) {
+            player.InputHandler.ConsumeDashInput();
             stateMachine.ChangeState(player.DashState);
         } else if (xInput != 0) {
             stateMachine.ChangeState(player.MoveState);

@@ -46,7 +46,8 @@ public class PlayerInAirState : PlayerState
         jumpInput = player.InputHandler.JumpInput;
         dashInput = player.InputHandler.DashInput;
 
-        if (dashInput) {
+        if (dashInput && player.DashState.CanDash()) {
+            player.InputHandler.ConsumeDashInput();
             stateMachine.ChangeState(player.DashState);
             return;
         }
@@ -62,7 +63,13 @@ public class PlayerInAirState : PlayerState
             stateMachine.ChangeState(player.JumpState);
         } else {
             player.CheckShouldFlip(xInput);
-            player.SetVelocityX(playerData.moveSpeed * xInput);
+
+            if (xInput != 0) {
+                player.AccelerateX();
+            } else {
+                player.DecelerateX();
+            }
+            // player.SetVelocityX(playerData.moveSpeed * xInput);
         }
     }
 

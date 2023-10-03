@@ -14,11 +14,12 @@ public class PlayerInputHandler : MonoBehaviour
     private float jumpInputStartTime;
 
     [SerializeField]
-    private float dashInputBufferTime = 0.1f;
+    private float dashInputBufferTime = 0.2f;
     private float dashInputStartTime;
 
     private void Update() {
         CheckJumpInputBufferTime();
+        CheckDashInputBufferTime();
     }
 
     public void OnMoveInput(InputAction.CallbackContext ctx) {
@@ -36,14 +37,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnDashInput(InputAction.CallbackContext ctx) {
         if (ctx.started) {
-            dashInputStartTime = Time.time;
             DashInput = true;
+            dashInputStartTime = Time.time;
         } else if (ctx.canceled) {
             DashInput = false;
         }
     }
 
     public void ConsumeJumpInput() => JumpInput = false;
+    public void ConsumeDashInput() => DashInput = false;
 
     private void CheckJumpInputBufferTime() {
         if (JumpInput && Time.time >= jumpInputStartTime + jumpInputBufferTime) {
@@ -53,7 +55,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void CheckDashInputBufferTime() {
         if (DashInput && Time.time > dashInputStartTime + dashInputBufferTime) {
-            JumpInput = false;
+            DashInput = false;
         }
     }
 }

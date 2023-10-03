@@ -1,25 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDashState : PlayerAbilityState
 {
     private int facingDirection;
+    private float endTime;
 
     public PlayerDashState(Player player, PlayerStateMachine stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
     {
         facingDirection = player.FacingDirection;
+        endTime = 0;
     }
 
     public override void Enter()
     {
         base.Enter();
-
-        Debug.Log("dashing");
+        
         isAbilityDone = false;
+        facingDirection = player.FacingDirection;
 
         player.SetGravityScale(0);
-        facingDirection = player.FacingDirection;
         player.SetVelocityX(facingDirection * playerData.dashSpeed);
         player.SetVelocityY(0);
     }
@@ -28,6 +27,7 @@ public class PlayerDashState : PlayerAbilityState
     {
         base.Exit();
         player.SetVelocityX(facingDirection * playerData.moveSpeed);
+        endTime = Time.time;
     }
 
     public override void DoChecks()
@@ -40,8 +40,11 @@ public class PlayerDashState : PlayerAbilityState
         base.LogicUpdate();
 
         if (Time.time > startTime + playerData.dashTime) {
-            Debug.Log("dash complete");
             isAbilityDone = true;
         }
+    }
+
+    public bool CanDash() {
+        return Time.time > endTime + playerData.dashCooldownTime;
     }
 }

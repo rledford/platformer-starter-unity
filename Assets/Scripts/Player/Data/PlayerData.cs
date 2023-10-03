@@ -10,7 +10,9 @@ public class PlayerData : ScriptableObject
     public float maxFallSpeed = 15f;
     
     [Header("Move State")]
-    public float moveSpeed = 10;
+    public float moveSpeed = 10f;
+    public float moveAccel = 5f;
+    public float moveDecel = 5f;
 
     [Header("Jump State")]
     public float jumpHeight = 6;
@@ -22,7 +24,7 @@ public class PlayerData : ScriptableObject
     [Header("Dash")]
     public float dashSpeed = 30f;
     public float dashTime = 0.3f;
-    public int numDashes = 1;
+    public float dashCooldownTime = 0.5f;
 
     [Header("Check Variables")]
     public float groundCheckRadius = 0.3f;
