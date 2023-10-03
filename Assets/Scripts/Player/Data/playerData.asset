@@ -16,13 +16,18 @@ MonoBehaviour:
   fallGravityScale: 7.5
   maxFallSpeed: 22.5
   moveSpeed: 11.5
+  moveAccel: 9
+  moveDecel: 7.5
   jumpHeight: 6
   numJumps: 2
   coyoteTime: 0.2
   dashSpeed: 22.5
   dashTime: 0.3
-  numDashes: 1
-  groundCheckRadius: 0.3
+  dashCooldownTime: 0.5
+  wallSlideSpeed: 2
+  wallSlideCooldownTime: 0.2
+  wallCheckRadius: 0.15
+  groundCheckRadius: 0.25
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8

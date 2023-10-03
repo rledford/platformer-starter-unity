@@ -28,4 +28,8 @@ public class PlayerJumpState : PlayerAbilityState
     }
 
     public void DecrementJumpsLeft() => numJumpsLeft--;
+
+    public void AllowOneJump() {
+        numJumpsLeft = 1;
+    }
 }

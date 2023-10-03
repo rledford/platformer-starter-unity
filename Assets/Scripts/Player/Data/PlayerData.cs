@@ -26,7 +26,12 @@ public class PlayerData : ScriptableObject
     public float dashTime = 0.3f;
     public float dashCooldownTime = 0.5f;
 
+    [Header("Wall Slide")]
+    public float wallSlideSpeed = 2f;
+    public float wallSlideCooldownTime = 0.2f;
+
     [Header("Check Variables")]
+    public float wallCheckRadius = 0.1f;
     public float groundCheckRadius = 0.3f;
     public LayerMask whatIsGround;
 }

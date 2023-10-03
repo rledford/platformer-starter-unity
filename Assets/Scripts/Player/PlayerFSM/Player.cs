@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public PlayerJumpState JumpState { get; private set; }
     public PlayerInAirState InAirState { get; private set; }
     public PlayerDashState DashState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
     
     [SerializeField]
     private PlayerData playerData;
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour
     #region Check Transforms
     [SerializeField]
     private Transform groundCheck;
+    [SerializeField]
+    private Transform wallCheck;
     #endregion
     
     #region Other Variables
@@ -40,6 +43,7 @@ public class Player : MonoBehaviour
         JumpState = new PlayerJumpState(this, StateMachine, playerData);
         InAirState = new PlayerInAirState(this, StateMachine, playerData);
         DashState = new PlayerDashState(this, StateMachine, playerData);
+        WallSlideState = new PlayerWallSlideState(this, StateMachine, playerData);
     }
 
     private void Start() {
@@ -104,13 +108,18 @@ public class Player : MonoBehaviour
     public bool CheckIsTouchingGround() {
         return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround);
     }
+
+    public bool CheckIsTouchingWall() {
+        return Physics2D.OverlapCircle(wallCheck.position, playerData.wallCheckRadius, playerData.whatIsGround);
+    }
+
     public void CheckShouldFlip(int xInput) {
         if (xInput != 0 && xInput != FacingDirection) {
             Flip();
         }
     }
 
-    public bool CheckIsFalling() => CurrentVelocity.y < 0.01f;
+    public bool CheckIsFalling() => CurrentVelocity.y < 0.1f;
     #endregion
 
     #region Other Functions
@@ -125,6 +134,7 @@ public class Player : MonoBehaviour
     {
 		Gizmos.color = Color.green;
 		Gizmos.DrawSphere(groundCheck.position, playerData.groundCheckRadius);
+        Gizmos.DrawSphere(wallCheck.position, playerData.wallCheckRadius);
 	}
     #endregion
 }

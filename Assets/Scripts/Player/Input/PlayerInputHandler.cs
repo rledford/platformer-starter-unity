@@ -44,8 +44,8 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
-    public void ConsumeJumpInput() => JumpInput = false;
-    public void ConsumeDashInput() => DashInput = false;
+    public void UseJumpInput() => JumpInput = false;
+    public void UseDashInput() => DashInput = false;
 
     private void CheckJumpInputBufferTime() {
         if (JumpInput && Time.time >= jumpInputStartTime + jumpInputBufferTime) {

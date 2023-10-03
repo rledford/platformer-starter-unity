@@ -25,7 +25,7 @@ public class PlayerIdleState : PlayerGroundedState
     {
         base.LogicUpdate();
         if (dashInput && player.DashState.CanDash()) {
-            player.InputHandler.ConsumeDashInput();
+            player.InputHandler.UseDashInput();
             stateMachine.ChangeState(player.DashState);
         } else if (xInput != 0) {
             stateMachine.ChangeState(player.MoveState);

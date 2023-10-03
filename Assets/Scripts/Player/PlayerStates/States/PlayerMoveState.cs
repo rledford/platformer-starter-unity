@@ -26,7 +26,7 @@ public class PlayerMoveState : PlayerGroundedState
         base.LogicUpdate();
         player.CheckShouldFlip(xInput);
         if (dashInput && player.DashState.CanDash()) {
-            player.InputHandler.ConsumeDashInput();
+            player.InputHandler.UseDashInput();
             stateMachine.ChangeState(player.DashState);
         } else if (xInput == 0) {
             player.DecelerateX();

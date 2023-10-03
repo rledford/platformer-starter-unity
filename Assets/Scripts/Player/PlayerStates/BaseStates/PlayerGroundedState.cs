@@ -39,7 +39,7 @@ public class PlayerGroundedState : PlayerState
         dashInput = player.InputHandler.DashInput;
 
         if (jumpInput && player.JumpState.CanJump()) {
-            player.InputHandler.ConsumeJumpInput();
+            player.InputHandler.UseJumpInput();
             stateMachine.ChangeState(player.JumpState);
         } else if (!isGrounded) {
             player.InAirState.StartCoyote();

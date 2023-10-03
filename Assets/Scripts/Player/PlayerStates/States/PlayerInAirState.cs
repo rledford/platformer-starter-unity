@@ -9,6 +9,7 @@ public class PlayerInAirState : PlayerState
     private bool dashInput;
     private bool isGrounded;
     private bool isFalling;
+    private bool isTouchingWall;
     private bool hasCoyote;
     public PlayerInAirState(Player player, PlayerStateMachine stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
     {
@@ -25,6 +26,7 @@ public class PlayerInAirState : PlayerState
 
         isGrounded = player.CheckIsTouchingGround();
         isFalling = player.CheckIsFalling();
+        isTouchingWall = player.CheckIsTouchingWall();
 
         if (isFalling) {
             player.SetGravityScale(playerData.fallGravityScale);
@@ -47,19 +49,23 @@ public class PlayerInAirState : PlayerState
         dashInput = player.InputHandler.DashInput;
 
         if (dashInput && player.DashState.CanDash()) {
-            player.InputHandler.ConsumeDashInput();
+            player.InputHandler.UseDashInput();
             stateMachine.ChangeState(player.DashState);
             return;
         }
 
-        if (isGrounded && isFalling) {
-            if (xInput != 0) {
-                stateMachine.ChangeState(player.MoveState);
-            } else {
-                stateMachine.ChangeState(player.IdleState);
+        if (isGrounded) {
+            if (isFalling) {
+                if (xInput != 0) {
+                    stateMachine.ChangeState(player.MoveState);
+                } else {
+                    stateMachine.ChangeState(player.IdleState);
+                }
             }
+        } else if (isTouchingWall && isFalling) {
+            stateMachine.ChangeState(player.WallSlideState);
         } else if (jumpInput && player.JumpState.CanJump()) {
-            player.InputHandler.ConsumeJumpInput();
+            player.InputHandler.UseJumpInput();
             stateMachine.ChangeState(player.JumpState);
         } else {
             player.CheckShouldFlip(xInput);
