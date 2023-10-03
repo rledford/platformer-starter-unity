@@ -7,7 +7,6 @@ public class PlayerWallSlideState : PlayerState
     private bool jumpInput;
     private int xInput;
     private int wallDirection;
-    private float endTime;
 
     public PlayerWallSlideState(Player player, PlayerStateMachine stateMachine, PlayerData playerData) : base(player, stateMachine, playerData)
     {
@@ -24,7 +23,6 @@ public class PlayerWallSlideState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        endTime = Time.time;
     }
     public override void DoChecks()
     {
