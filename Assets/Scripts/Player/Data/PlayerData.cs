@@ -18,17 +18,20 @@ public class PlayerData : ScriptableObject
     public float jumpHeight = 6;
     public int numJumps = 1;
 
-    [Header("In Air")]
+    [Header("In Air State")]
     public float coyoteTime = 0.2f;
 
-    [Header("Dash")]
+    [Header("Dash State")]
     public float dashSpeed = 30f;
     public float dashTime = 0.3f;
     public float dashCooldownTime = 0.5f;
 
-    [Header("Wall Slide")]
+    [Header("Wall Slide State")]
     public float wallSlideSpeed = 2f;
     public float wallSlideCooldownTime = 0.2f;
+
+    [Header("Dive State")]
+    public float diveSpeed = 30f;
 
     [Header("Check Variables")]
     public float wallCheckRadius = 0.1f;

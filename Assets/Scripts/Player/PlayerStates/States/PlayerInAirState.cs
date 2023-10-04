@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInAirState : PlayerState
 {
     private int xInput;
+    private bool downInput;
     private bool jumpInput;
     private bool dashInput;
     private bool isGrounded;
@@ -45,6 +46,7 @@ public class PlayerInAirState : PlayerState
         UpdateCoyote();
 
         xInput = player.InputHandler.MoveX;
+        downInput = player.InputHandler.MoveY < 0;
         jumpInput = player.InputHandler.JumpInput;
         dashInput = player.InputHandler.DashInput;
 
@@ -64,9 +66,16 @@ public class PlayerInAirState : PlayerState
             }
         } else if (isTouchingWall && isFalling) {
             stateMachine.ChangeState(player.WallSlideState);
-        } else if (jumpInput && player.JumpState.CanJump()) {
-            player.InputHandler.UseJumpInput();
-            stateMachine.ChangeState(player.JumpState);
+        } else if (jumpInput) {
+            if (downInput) {
+                if (player.DiveState.CanDive()) {
+                    player.InputHandler.UseJumpInput();
+                    stateMachine.ChangeState(player.DiveState);
+                }
+            } else if (player.JumpState.CanJump()) {
+                player.InputHandler.UseJumpInput();
+                stateMachine.ChangeState(player.JumpState);
+            }
         } else {
             player.CheckShouldFlip(xInput);
 

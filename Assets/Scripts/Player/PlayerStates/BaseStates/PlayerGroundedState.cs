@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerGroundedState : PlayerState
 {
     protected int xInput;
+    protected bool downInput;
     protected bool dashInput;
     private bool jumpInput;
     private bool isGrounded;
@@ -24,6 +25,7 @@ public class PlayerGroundedState : PlayerState
 
         player.SetGravityScale(playerData.gravityScale);
         player.JumpState.ResetJumpsLeft();
+        player.DiveState.ResetDivesLeft();
     }
 
     public override void Exit()
@@ -35,10 +37,11 @@ public class PlayerGroundedState : PlayerState
     {
         base.LogicUpdate();
         xInput = player.InputHandler.MoveX;
+        downInput = player.InputHandler.MoveY < 0;
         jumpInput = player.InputHandler.JumpInput;
         dashInput = player.InputHandler.DashInput;
 
-        if (jumpInput && player.JumpState.CanJump()) {
+        if (jumpInput && player.JumpState.CanJump() && !downInput) {
             player.InputHandler.UseJumpInput();
             stateMachine.ChangeState(player.JumpState);
         } else if (!isGrounded) {
