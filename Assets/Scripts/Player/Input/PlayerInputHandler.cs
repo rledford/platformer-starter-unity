@@ -7,7 +7,9 @@ public class PlayerInputHandler : MonoBehaviour
     public int MoveX { get; private set; }
     public int MoveY { get; private set; }
     public bool JumpInput { get; private set; }
+    public bool JumpInputCanceled { get; private set; }
     public bool DashInput { get; private set; }
+    public bool GrabInput { get; private set; }
 
     [SerializeField]
     private float jumpInputBufferTime = 0.2f;
@@ -31,7 +33,20 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnJumpInput(InputAction.CallbackContext ctx) {
         if (ctx.started) {
             JumpInput = true;
+            JumpInputCanceled = false;
             jumpInputStartTime = Time.time;
+        }
+
+        if (ctx.canceled) {
+            JumpInputCanceled = true;
+        }
+    }
+
+    public void OnGrabInput(InputAction.CallbackContext ctx) {
+        if (ctx.started) {
+            GrabInput = true;
+        } else if (ctx.canceled) {
+            GrabInput = false;
         }
     }
 

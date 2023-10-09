@@ -24,6 +24,11 @@ public class PlayerIdleState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+        if (isExitingState) {
+            return;
+        }
+        
         if (dashInput && player.DashState.CanDash()) {
             player.InputHandler.UseDashInput();
             stateMachine.ChangeState(player.DashState);

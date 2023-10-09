@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public PlayerInAirState InAirState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerWallGrabState WallGrabState { get; private set; }
+    public PlayerWallClimbState WallClimbState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerDiveState DiveState {get; private set; }
     
     [SerializeField]
@@ -34,6 +37,7 @@ public class Player : MonoBehaviour
     public Vector2 CurrentVelocity { get; private set; }
     public int FacingDirection { get; private set; }
     private Vector2 workspace;
+    private RaycastHit2D[] wallCollisions = new RaycastHit2D[1];
     #endregion
 
     #region Unity Callback Functions
@@ -45,6 +49,9 @@ public class Player : MonoBehaviour
         InAirState = new PlayerInAirState(this, StateMachine, playerData);
         DashState = new PlayerDashState(this, StateMachine, playerData);
         WallSlideState = new PlayerWallSlideState(this, StateMachine, playerData);
+        WallGrabState = new PlayerWallGrabState(this, StateMachine, playerData);
+        WallClimbState = new PlayerWallClimbState(this, StateMachine, playerData);
+        WallJumpState = new PlayerWallJumpState(this, StateMachine, playerData);
         DiveState = new PlayerDiveState(this, StateMachine, playerData);
     }
 
@@ -73,16 +80,8 @@ public class Player : MonoBehaviour
     }
 
     public void AccelerateX() {
-        if (Math.Abs(CurrentVelocity.x) > playerData.moveSpeed) {
-            return;
-        }
-
-        float vx = CurrentVelocity.x + FacingDirection * playerData.moveSpeed * playerData.moveAccel * Time.deltaTime;
-        if (Math.Abs(vx) > playerData.moveSpeed) {
-            SetVelocityX(playerData.moveSpeed * FacingDirection);
-        } else {
-            SetVelocityX(vx);
-        }
+        float vx = Mathf.Clamp(CurrentVelocity.x + FacingDirection * playerData.moveSpeed * playerData.moveAccel * Time.deltaTime, -playerData.moveSpeed, playerData.moveSpeed);
+        SetVelocityX(vx);
     }
 
     public void DecelerateX() {
@@ -101,6 +100,12 @@ public class Player : MonoBehaviour
         CurrentVelocity = workspace;
     }
 
+    public void SetVelocity(float speed, Vector2 angle, int direction) {
+        workspace.Set(angle.x * speed * direction, angle.y * speed);
+        RB.velocity = workspace;
+        CurrentVelocity = workspace;
+    }
+
     public void SetGravityScale(float gs) {
         RB.gravityScale = gs;
     }
@@ -111,8 +116,15 @@ public class Player : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround);
     }
 
-    public bool CheckIsTouchingWall() {
-        return Physics2D.OverlapCircle(wallCheck.position, playerData.wallCheckRadius, playerData.whatIsGround);
+    public bool CheckIsTouchingWallForward() {
+        return checkTouchingWall(FacingDirection);
+    }
+    public bool CheckIsTouchingWallBehind() {
+        return checkTouchingWall(-FacingDirection);
+    }
+
+    private bool checkTouchingWall(int direction) {
+        return Physics2D.RaycastNonAlloc(wallCheck.position, Vector2.right * direction, wallCollisions, playerData.wallCheckRange, playerData.whatIsGround) > 0;
     }
 
     public void CheckShouldFlip(int xInput) {
@@ -136,7 +148,7 @@ public class Player : MonoBehaviour
     {
 		Gizmos.color = Color.green;
 		Gizmos.DrawSphere(groundCheck.position, playerData.groundCheckRadius);
-        Gizmos.DrawSphere(wallCheck.position, playerData.wallCheckRadius);
+        Gizmos.DrawRay(wallCheck.position, Vector2.right * playerData.wallCheckRange * FacingDirection);
 	}
     #endregion
 }

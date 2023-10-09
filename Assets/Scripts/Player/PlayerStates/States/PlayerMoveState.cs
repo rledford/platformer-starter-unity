@@ -24,6 +24,11 @@ public class PlayerMoveState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        
+        if (isExitingState) {
+            return;
+        }
+        
         player.CheckShouldFlip(xInput);
         if (dashInput && player.DashState.CanDash()) {
             player.InputHandler.UseDashInput();

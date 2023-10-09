@@ -16,6 +16,8 @@ public class PlayerJumpState : PlayerAbilityState
         
         player.SetGravityScale(playerData.gravityScale);
         player.SetVelocityY(jumpForce);
+        player.InAirState.SetIsJumping();
+        player.InputHandler.UseJumpInput();
 
         isAbilityDone = true;
         numJumpsLeft--;
@@ -28,8 +30,4 @@ public class PlayerJumpState : PlayerAbilityState
     }
 
     public void DecrementJumpsLeft() => numJumpsLeft--;
-
-    public void AllowOneJump() {
-        numJumpsLeft = 1;
-    }
 }

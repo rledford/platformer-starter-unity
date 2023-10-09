@@ -21,12 +21,17 @@ MonoBehaviour:
   jumpHeight: 6
   numJumps: 2
   coyoteTime: 0.2
+  variableJumpHeightMultiplier: 0.25
   dashSpeed: 22.5
   dashTime: 0.3
   dashCooldownTime: 0.5
   wallSlideSpeed: 2
-  wallSlideCooldownTime: 0.2
-  wallCheckRadius: 0.15
+  wallClimbSpeed: 4
+  wallJumpSpeed: 11.25
+  wallJumpAngle: {x: 1, y: 2}
+  wallJumpTime: 0.3
+  diveSpeed: 45
+  wallCheckRange: 0.3
   groundCheckRadius: 0.25
   whatIsGround:
     serializedVersion: 2
