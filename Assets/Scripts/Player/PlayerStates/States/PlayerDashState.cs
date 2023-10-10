@@ -21,6 +21,8 @@ public class PlayerDashState : PlayerAbilityState
         player.SetGravityScale(0);
         player.SetVelocityX(facingDirection * playerData.dashSpeed);
         player.SetVelocityY(0);
+
+        player.Anim.Play("player_dash");
     }
 
     public override void Exit()

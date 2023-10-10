@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     #region Components
     public PlayerInputHandler InputHandler { get; private set; }
     public Rigidbody2D RB { get; private set; }
+    public Animator Anim { get; private set; }
     #endregion
 
     #region State Variables
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
 
     private void Start() {
         RB = GetComponent<Rigidbody2D>();
+        Anim = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
         StateMachine.Initialize(IdleState);
         FacingDirection = 1;

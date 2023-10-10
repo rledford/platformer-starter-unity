@@ -17,6 +17,7 @@ public class PlayerDiveState : PlayerAbilityState
         numDivesLeft--;
         player.SetVelocityX(0f);
         player.SetVelocityY(-playerData.diveSpeed);
+        player.Anim.Play("player_dive");
     }
 
     public override void Exit()

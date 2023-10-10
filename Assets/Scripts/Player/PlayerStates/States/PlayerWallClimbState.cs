@@ -11,6 +11,8 @@ public class PlayerWallClimbState : PlayerTouchingWallState
     public override void Enter()
     {
         base.Enter();
+
+        player.Anim.Play("player_wall_climb");
     }
 
     public override void LogicUpdate()

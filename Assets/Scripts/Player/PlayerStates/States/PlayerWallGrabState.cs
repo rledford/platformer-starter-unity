@@ -16,6 +16,8 @@ public class PlayerWallGrabState : PlayerTouchingWallState
 
         holdPosition = player.transform.position;
 
+        player.Anim.Play("player_wall_grab");
+
         HoldPosition();
     }
 

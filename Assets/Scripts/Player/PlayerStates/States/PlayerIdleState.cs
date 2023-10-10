@@ -14,6 +14,7 @@ public class PlayerIdleState : PlayerGroundedState
         base.Enter();
         
         player.SetVelocityX(0f);
+        player.Anim.Play("player_idle");
     }
 
     public override void Exit()
@@ -28,7 +29,7 @@ public class PlayerIdleState : PlayerGroundedState
         if (isExitingState) {
             return;
         }
-        
+
         if (dashInput && player.DashState.CanDash()) {
             player.InputHandler.UseDashInput();
             stateMachine.ChangeState(player.DashState);

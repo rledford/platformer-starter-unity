@@ -14,6 +14,8 @@ public class PlayerMoveState : PlayerGroundedState
     public override void Enter()
     {
         base.Enter();
+
+        player.Anim.Play("player_run");
     }
 
     public override void Exit()
@@ -24,7 +26,7 @@ public class PlayerMoveState : PlayerGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        
+
         if (isExitingState) {
             return;
         }

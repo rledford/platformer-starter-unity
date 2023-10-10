@@ -19,6 +19,8 @@ public class PlayerJumpState : PlayerAbilityState
         player.InAirState.SetIsJumping();
         player.InputHandler.UseJumpInput();
 
+         player.Anim.Play("player_jump");
+
         isAbilityDone = true;
         numJumpsLeft--;
     }

@@ -6,6 +6,13 @@ public class PlayerWallSlideState : PlayerTouchingWallState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+
+        player.Anim.Play("player_wall_slide");
+    }
+
     public override void LogicUpdate()
     {
         base.LogicUpdate();

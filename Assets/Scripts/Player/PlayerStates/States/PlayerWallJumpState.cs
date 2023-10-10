@@ -19,6 +19,7 @@ public class PlayerWallJumpState : PlayerAbilityState
         player.CheckShouldFlip(wallJumpDirection);
         player.JumpState.DecrementJumpsLeft();
         player.InputHandler.UseJumpInput();
+        player.Anim.Play("player_jump");
     }
 
     public override void LogicUpdate()
